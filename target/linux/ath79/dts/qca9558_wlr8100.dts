@@ -24,40 +24,28 @@
 
 	leds {
 		compatible = "gpio-leds";
+		
+		ops_white {
+			label = "wlr8100:white:ops";
+			gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
 
 		status_amber {
 			label = "wlr8100:amber:status";
+			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+		};
+
+		wifi2g {
+			label = "wlr8100:blue:wifi2g";
 			gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
-		status_red {
-			label = "wlr8100:red:status";
-			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
-			default-state = "off";
-		};
-
-		wps_green {
-			label = "wlr8100:green:wps";
-			gpios = <&gpio 20 GPIO_ACTIVE_LOW>;
-			default-state = "off";
-		};
-
-		wps_red {
-			label = "wlr8100:red:wps";
-			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-			default-state = "off";
-		};
-
-		wifi2g_yellow {
-			label = "wlr8100:red:wifi2g";
-			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
-			default-state = "off";
-		};
-
-		usb_red {
-			label = "wlr8100:red:usb";
-			gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+		wifi5g {
+			label = "wlr8100:blue:wifi5g";
+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 	};
@@ -69,16 +57,16 @@
 		poll-interval = <20>;
 
 		button@0 {
-			label = "reset";
+			label = "wps_2g";
 			linux,code = <KEY_RESTART>;
 			gpios = <&gpio 21 GPIO_ACTIVE_LOW>;
 			debounce-interval = <60>;
 		};
     
-    button@1 {
-			label = "qss";
+		button@1 {
+			label = "wps_5g";
 			linux,code = <KEY_WPS_BUTTON>;
-			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
 			debounce-interval = <60>;
 		};
 	};
