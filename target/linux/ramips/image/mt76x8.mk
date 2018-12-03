@@ -369,6 +369,13 @@ define Device/widora_neo-32m
 endef
 TARGET_DEVICES += widora_neo-32m
 
+define Device/wr1000
+  DTS := WR1000
+  IMAGE_SIZE := $(ralink_default_fw_size_8M)
+  DEVICE_TITLE := Cudy WR1000
+endef
+TARGET_DEVICES += wr1000
+
 define Device/wrtnode2p
   DTS := WRTNODE2P
   IMAGE_SIZE := $(ralink_default_fw_size_16M)
