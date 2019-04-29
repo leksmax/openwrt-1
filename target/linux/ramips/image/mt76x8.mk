@@ -3,6 +3,7 @@
 #
 
 DEVICE_VARS += SERCOMM_KERNEL_OFFSET SERCOMM_HWID SERCOMM_HWVER SERCOMM_SWVER
+DEVICE_VARS += JCG_MAXSIZE
 
 define Build/mksercommfw
 	$(STAGING_DIR_HOST)/bin/mksercommfw \
@@ -11,6 +12,11 @@ define Build/mksercommfw
 		$(SERCOMM_HWID) \
 		$(SERCOMM_HWVER) \
 		$(SERCOMM_SWVER)
+endef
+
+define Build/jcg-header
+	$(STAGING_DIR_HOST)/bin/jcgimage -v $(1) -m $(JCG_MAXSIZE) -u $@ -o $@.new
+	mv $@.new $@
 endef
 
 define Device/tplink
@@ -372,6 +378,10 @@ TARGET_DEVICES += widora_neo-32m
 define Device/wr1000
   DTS := WR1000
   IMAGE_SIZE := $(ralink_default_fw_size_8M)
+  IMAGES += factory.bin
+  IMAGE/factory.bin := \
+	$$(sysupgrade_bin) | check-size $$$$(IMAGE_SIZE) | jcg-header 92.122
+  JCG_MAXSIZE := 8060928
   DEVICE_TITLE := Cudy WR1000
 endef
 TARGET_DEVICES += wr1000
