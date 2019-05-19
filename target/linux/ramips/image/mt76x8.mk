@@ -3,7 +3,6 @@
 #
 
 DEVICE_VARS += SERCOMM_HWID SERCOMM_HWVER SERCOMM_SWVER
-DEVICE_VARS += JCG_MAXSIZE
 
 define Build/sercom-seal
 	$(STAGING_DIR_HOST)/bin/mksercommfw \
@@ -16,11 +15,6 @@ endef
 
 define Build/sercom-footer
 	$(call Build/sercom-seal,-f)
-endef
-
-define Build/jcg-header
-	$(STAGING_DIR_HOST)/bin/jcgimage -v $(1) -m $(JCG_MAXSIZE) -u $@ -o $@.new
-	mv $@.new $@
 endef
 
 

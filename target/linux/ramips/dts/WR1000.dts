@@ -16,7 +16,7 @@
 		led-upgrade = &led_wps;
 	};
 
-	gpio-keys-polled {
+	keys {
 		compatible = "gpio-keys-polled";
 		poll-interval = <20>;
 
@@ -33,7 +33,7 @@
 		};
 	};
 
-	gpio-leds {
+	leds {
 		compatible = "gpio-leds";
 
 		lan1 {
@@ -64,36 +64,10 @@
 	};
 };
 
-&pinctrl {
-	state_default: pinctrl0 {
-		gpio {
-			ralink,group = "i2s", "refclk", "wdt", "p4led_an", "p3led_an", "p2led_an", "wled_an";
-			ralink,function = "gpio";
-		};
-	};
-};
-
-&pcie {
-	status = "okay";
-};
-
-&pcie0 {
-	mt76@0,0 {
-		reg = <0x0000 0 0 0 0>;
-		mediatek,mtd-eeprom = <&factory 0x8000>;
-		ieee80211-freq-limit = <5000000 6000000>;
-
-		led {
-			led-sources = <2>;
-			led-active-low;
-		};
-	};
-};
-
 &spi0 {
 	status = "okay";
 
-	w25q64@0 {
+	flash@0 {
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <10000000>;
@@ -127,6 +101,33 @@
 				reg = <0x50000 0x7b0000>;
 			};
 		
+		};
+	};
+};
+
+&pinctrl {
+	state_default: pinctrl0 {
+		gpio {
+			ralink,group = "i2s", "refclk", "wdt", "p4led_an",
+					"p3led_an", "p2led_an", "wled_an";
+			ralink,function = "gpio";
+		};
+	};
+};
+
+&pcie {
+	status = "okay";
+};
+
+&pcie0 {
+	wifi@0,0 {
+		reg = <0x0000 0 0 0 0>;
+		mediatek,mtd-eeprom = <&factory 0x8000>;
+		ieee80211-freq-limit = <5000000 6000000>;
+
+		led {
+			led-sources = <2>;
+			led-active-low;
 		};
 	};
 };

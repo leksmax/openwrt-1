@@ -324,7 +324,7 @@ main(int argc, char **argv)
 	char *file2 = NULL;
 	char *version = NULL;
 	size_t maxsize = MAXSIZE;
-	char* endptr;
+	char *endptr;
 	int mode = MODE_UNKNOWN;
 	int fdo, fd1, fd2;
 	size_t size1, size2, sizeu, sizeo, off1, off2;
@@ -400,9 +400,8 @@ main(int argc, char **argv)
 		sizeo = sizeof(*jh) + sizeu;
 	}
 
-	if (sizeo > maxsize) {
-		errx(1,"payload too large: %zd > %zd\n", sizeo, maxsize);
-	}
+	if (sizeo > maxsize)
+		errx(1, "payload too large: %zd > %zd\n", sizeo, maxsize);
 
 	fdo = open(imagefile, O_RDWR | O_CREAT | O_TRUNC, 00644);
 	if (fdo < 0) {
