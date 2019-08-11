@@ -275,6 +275,52 @@ define Device/tplink_archer-d50-v1
 endef
 TARGET_DEVICES += tplink_archer-d50-v1
 
+define Device/tplink_archer-d7-v1
+  ATH_SOC := qca9558
+  DEVICE_VENDOR := TP-Link
+  DEVICE_MODEL := Archer D7
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  BOARDNAME := ARCHER-D7-V1
+  IMAGE_SIZE := 15936k
+  TPLINK_HWID := 0x89300001
+  TPLINK_HWREV := 0x0000002D
+  TPLINK_FLASHLAYOUT := 16Mqca
+  TPLINK_HWREVADD := 0x00000002
+  TPLINK_HVERSION := 3
+  KERNEL := kernel-bin | append-dtb | lzma
+  KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | \
+	tplink-v2-header -s -V "ver. 2.0"
+  IMAGES := sysupgrade.bin
+  IMAGE/sysupgrade.bin := tplink-v2-image -s -V "ver. 2.0" | \
+	append-metadata | check-size $$$$(IMAGE_SIZE)
+  SUPPORTED_DEVICES += archer-d7-v1
+endef
+TARGET_DEVICES += tplink_archer-d7-v1
+
+define Device/tplink_archer-d7b-v1
+  ATH_SOC := qca9558
+  DEVICE_VENDOR := TP-Link
+  DEVICE_MODEL := Archer D7b
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  BOARDNAME := ARCHER-D7b-V1
+  IMAGE_SIZE := 16000k
+  TPLINK_HWID := 0x89300001
+  TPLINK_HWREV := 0x0000002D
+  TPLINK_FLASHLAYOUT := 16Mqca
+  TPLINK_HWREVADD := 0x00000002
+  TPLINK_HVERSION := 3
+  KERNEL := kernel-bin | append-dtb | lzma
+  KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | \
+        tplink-v2-header -s -V "ver. 2.0"
+  IMAGES := sysupgrade.bin
+  IMAGE/sysupgrade.bin := tplink-v2-image -s -V "ver. 2.0" | \
+        append-metadata | check-size $$$$(IMAGE_SIZE)
+  SUPPORTED_DEVICES += archer-d7b-v1
+endef
+TARGET_DEVICES += tplink_archer-d7b-v1
+
 define Device/tplink_re350k-v1
   $(Device/tplink-safeloader)
   ATH_SOC := qca9558
