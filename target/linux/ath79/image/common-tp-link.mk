@@ -119,3 +119,14 @@ define Device/tplink-loader-okli
   COMPILE/loader-$(1).elf := loader-okli-compile
   KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49 | loader-okli $(1) 12288
 endef
+
+define Device/tplink-header-v3
+  DEVICE_VENDOR := TP-Link
+  TPLINK_HVERSION := 3
+  KERNEL := kernel-bin | append-dtb | lzma
+  KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | \
+        tplink-v2-header -s -V "ver. 2.0"
+  IMAGES := sysupgrade.bin
+  IMAGE/sysupgrade.bin := tplink-v2-image -s -V "ver. 2.0" | \
+        append-metadata | check-size $$$$(IMAGE_SIZE)
+endef
