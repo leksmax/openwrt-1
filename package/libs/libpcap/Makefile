@@ -8,13 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpcap
-PKG_VERSION:=1.9.1
+PKG_VERSION:=1.9.1.1000
 PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
-        http://www.tcpdump.org/release/
-PKG_HASH:=635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094
+# PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+# PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
+#         http://www.tcpdump.org/release/
+# PKG_HASH:=635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094
+
+
+PKG_SOURCE_URL:=https://github.com/the-tcpdump-group/libpcap
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_DATE:=2019-11-05
+PKG_SOURCE_VERSION:=8cb69261365cf70897231dcfb1fe046234f1aa35
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 

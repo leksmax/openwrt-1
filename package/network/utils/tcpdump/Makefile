@@ -8,13 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tcpdump
-PKG_VERSION:=4.9.3
+PKG_VERSION:=4.9.3.1000
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
-	http://www.tcpdump.org/release/
-PKG_HASH:=2cd47cb3d460b6ff75f4a9940f594317ad456cfbf2bd2c8e5151e16559db6410
+# PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+# PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
+# 	http://www.tcpdump.org/release/
+# PKG_HASH:=2cd47cb3d460b6ff75f4a9940f594317ad456cfbf2bd2c8e5151e16559db6410
+
+
+PKG_SOURCE_URL:=https://github.com/the-tcpdump-group/tcpdump
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_DATE:=2019-11-05
+PKG_SOURCE_VERSION:=e1bd3ba13512695f5856528feb327d328d1bc0c1
 
 PKG_BUILD_PARALLEL:=1
 
@@ -47,7 +53,8 @@ endef
 
 CONFIGURE_ARGS += \
 	--without-cap-ng \
-	--without-crypto
+	--without-crypto \
+	--with-system-libpcap
 
 ifeq ($(CONFIG_IPV6),y)
 CONFIGURE_ARGS += \
