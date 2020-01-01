@@ -44,6 +44,21 @@ netgear,ex6150v2)
 	ucidef_set_led_wlan "wlan2g" "WLAN2G" "ex61x0v2:green:router" "phy0tpt"
 	ucidef_set_led_wlan "wlan5g" "WLAN5G" "ex61x0v2:green:client" "phy1tpt"
 	;;
+netgear,ex7500-eu |\
+netgear,ex7500-us)
+	ucidef_set_rssimon "wlan0" "200000" "1"
+	ucidef_set_led_rssi "rssilow-wlan0" "RSSILOW-wlan0" "ex7500:red:wifi5g" "wlan0" "1" "40" "0" "3"
+	ucidef_set_led_rssi "rssimedium-wlan0" "RSSIMEDIUM-wlan0" "ex7500:green:wifi5g" "wlan0" "20" "80" "0" "3"
+	ucidef_set_led_rssi "rssihigh-wlan0" "RSSIHIGH-wlan0" "ex7500:blue:wifi5g" "wlan0" "60" "100" "0" "3"
+	ucidef_set_rssimon "wlan1" "200000" "1"
+	ucidef_set_led_rssi "rssilow-wlan1" "RSSILOW-wlan1" "ex7500:red:wifi2g" "wlan1" "1" "40" "0" "3"
+	ucidef_set_led_rssi "rssimedium-wlan1" "RSSIMEDIUM-wlan1" "ex7500:green:wifi2g" "wlan1" "20" "80" "0" "3"
+	ucidef_set_led_rssi "rssihigh-wlan1" "RSSIHIGH-wlan1" "ex7500:blue:wifi2g" "wlan1" "60" "100" "0" "3"
+	ucidef_set_rssimon "wlan2" "200000" "1"
+	ucidef_set_led_rssi "rssilow-wlan2" "RSSILOW-wlan2" "ex7500:red:mesh" "wlan2" "1" "40" "0" "3"
+	ucidef_set_led_rssi "rssimedium-wlan2" "RSSIMEDIUM-wlan2" "ex7500:green:mesh" "wlan2" "20" "80" "0" "3"
+	ucidef_set_led_rssi "rssihigh-wlan2" "RSSIHIGH-wlan3" "ex7500:blue:mesh" "wlan2" "60" "100" "0" "3"
+	;;
 qxwlan,e2600ac-c1 |\
 qxwlan,e2600ac-c2)
 	ucidef_set_led_wlan "wlan2g" "WLAN0" "e2600ac:green:wlan0" "phy0tpt"
