@@ -52,6 +52,7 @@ platform_do_upgrade() {
 	avm,fritzrepeater-1200 |\
 	avm,fritzrepeater-3000 |\
 	cilab,meshpoint-one |\
+	netgear,ex7500 |\
 	qxwlan,e2600ac-c2)
 		nand_do_upgrade "$1"
 		;;

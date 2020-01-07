@@ -359,6 +359,22 @@ define Device/netgear_ex6150v2
 endef
 TARGET_DEVICES += netgear_ex6150v2
 
+define Device/netgear_ex7500
+	$(call Device/FitImage)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := Netgear
+	DEVICE_MODEL := EX7500
+	SOC := qcom-ipq4019
+	DEVICE_DTS_CONFIG := config@ap.dk07.1-c1
+	NETGEAR_BOARD_ID := U12H361T00_NETGEAR
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	IMAGES += nand-factory.chk nand-sysupgrade.bin
+	IMAGE/nand-factory.chk := append-ubi | netgear-chk
+	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct ipq-wifi-netgear_ex7500
+endef
+TARGET_DEVICES += netgear_ex7500
+
 define Device/openmesh_a42
 	$(call Device/FitImageLzma)
 	DEVICE_VENDOR := OpenMesh
