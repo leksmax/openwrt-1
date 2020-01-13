@@ -54,9 +54,9 @@ netgear,ex7500)
 	ucidef_set_led_rssi "rssimedium" "RSSIMEDIUM" "ex7500:green:wifi2g" "wlan1" "20" "80"
 	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "ex7500:blue:wifi2g" "wlan1" "60" "100"
 	ucidef_set_rssimon "wlan2" "200000" "1"
-	ucidef_set_led_rssi "rssilow" "RSSILOW" "ex7500:red:mesh" "wlan2" "1" "100"
-	ucidef_set_led_rssi "rssimedium" "RSSIMEDIUM" "ex7500:green:mesh" "wlan2" "51" "100"
-	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "ex7500:blue:mesh" "wlan2" "76" "100"
+	ucidef_set_led_rssi "rssilow" "RSSILOW" "ex7500:red:mesh" "wlan2" "1" "40"
+	ucidef_set_led_rssi "rssimedium" "RSSIMEDIUM" "ex7500:green:mesh" "wlan2" "20" "80"
+	ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "ex7500:blue:mesh" "wlan2" "60" "100"
 	;;
 qxwlan,e2600ac-c1 |\
 qxwlan,e2600ac-c2)
