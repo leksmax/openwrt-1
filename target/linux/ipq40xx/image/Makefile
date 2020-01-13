@@ -370,7 +370,7 @@ define Device/netgear_ex7500
 	BLOCKSIZE := 128k
 	PAGESIZE := 2048
 	IMAGES += nand-factory.chk nand-sysupgrade.bin
-	IMAGE/nand-factory.chk := append-ubi | netgear-chk
+	IMAGE/nand-factory.chk := append-ubi | qsdk-ipq-factory-nand | netgear-chk
 	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct ipq-wifi-netgear_ex7500
 endef
 TARGET_DEVICES += netgear_ex7500

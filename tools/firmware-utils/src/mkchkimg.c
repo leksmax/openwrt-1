@@ -260,12 +260,12 @@ main (int argc, char * argv[])
 	hdr->header_len = htonl(header_len);
 	hdr->reserved[0] = (unsigned char)(region & 0xff);
 	hdr->reserved[1] = 1;		/* Major */
-	hdr->reserved[2] = 1;		/* Minor */
-	hdr->reserved[3] = 99;		/* Build */
-	hdr->reserved[4] = 0;
-	hdr->reserved[5] = 0;
+	hdr->reserved[2] = 0;		/* Minor */
+	hdr->reserved[3] = 0;		/* Build */
+	hdr->reserved[4] = 52;
+	hdr->reserved[5] = 1;
 	hdr->reserved[6] = 0;
-	hdr->reserved[7] = 0;
+	hdr->reserved[7] = 68;
 	message ("       Board Id: %s", board_id);
 	message ("         Region: %s", region == 1 ? "World Wide (WW)" 
 			: (region == 2 ? "North America (NA)" : "Unknown"));

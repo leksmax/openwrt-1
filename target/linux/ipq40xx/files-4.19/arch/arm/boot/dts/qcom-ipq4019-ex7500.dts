@@ -9,6 +9,10 @@
 	model = "Netgear EX7500";
 	compatible = "netgear,ex7500";
 
+	chosen {
+		bootargs-append = " root=/dev/ubiblock0_1 rootfstype=squashfs rootwait";
+	};
+
 	// aliases {
 	// 	led-boot = &power_led;
 	// 	led-failsafe = &power_led;
