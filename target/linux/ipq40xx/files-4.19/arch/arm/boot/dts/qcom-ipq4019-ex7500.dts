@@ -13,12 +13,12 @@
 		bootargs-append = " root=/dev/ubiblock0_1 rootfstype=squashfs rootwait";
 	};
 
-	// aliases {
-	// 	led-boot = &power_led;
-	// 	led-failsafe = &power_led;
-	// 	led-running = &power_led;
-	// 	led-upgrade = &power_led;
-	// };
+	aliases {
+		led-boot = &power_led;
+		led-failsafe = &power_led;
+		led-running = &power_led;
+		led-upgrade = &power_led;
+	};
 
 	soc {
 		rng@22000 {
@@ -156,6 +156,18 @@
 };
 
 &tlmm {
+	i2c_1_pins: i2c_1_pinmux {
+		pinmux {
+			function = "blsp_i2c1";
+			pins = "gpio34", "gpio35";
+		};
+		pinconf {
+			pins = "gpio34", "gpio35";
+			drive-strength = <16>;
+			bias-disable;
+		};
+	};
+
 	mdio_pins: mdio_pinmux {
 		mux_1 {
 			pins = "gpio6";
@@ -201,6 +213,105 @@
 			function = "qpic";
 			bias-pull-down;
 		};
+	};
+};
+
+&blsp1_i2c4 {
+	pinctrl-0 = <&i2c_1_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	led-controller@30 {
+		compatible = "ti,lp5562";
+		reg = <0x30>;
+		clock-mode = /bits/8 <2>;
+
+		/* RGB led */
+		chan0 {
+			chan-name = "ex7500:red:wifi2g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan1 {
+			chan-name = "ex7500:green:wifi2g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan2 {
+			chan-name = "ex7500:blue:wifi2g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan3 {
+			chan-name = "ex7500:blue:network";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+	};
+
+	led-controller@31 {
+		compatible = "ti,lp5562";
+		reg = <0x31>;
+		clock-mode = /bits/8 <2>;
+
+		/* RGB led */
+		chan0 {
+			chan-name = "ex7500:red:mesh";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan1 {
+			chan-name = "ex7500:green:mesh";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan2 {
+			chan-name = "ex7500:blue:mesh";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		power_led: chan3 {
+			chan-name = "ex7500:blue:power";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+	};
+
+	led-controller@32 {
+		compatible = "ti,lp5562";
+		reg = <0x32>;
+		clock-mode = /bits/8 <2>;
+
+		/* RGB led */
+		chan0 {
+			chan-name = "ex7500:red:wifi5g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan1 {
+			chan-name = "ex7500:green:wifi5g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		chan2 {
+			chan-name = "ex7500:blue:wifi5g";
+			led-cur = /bits/ 8 <0x20>;
+			max-cur = /bits/ 8 <0x60>;
+		};
+
+		// chan3 {
+		// 	chan-name = "ex7500:blue:power32";
+		// 	led-cur = /bits/ 8 <0x20>;
+		// 	max-cur = /bits/ 8 <0x60>;
+		// };
 	};
 };
 
