@@ -30,7 +30,7 @@ echo "\
 /dts-v1/;
 
 / {
-	description = \"OpenWrt factory image\";
+	description = \"Flashing nand 800 20000\";
 	#address-cells = <1>;
 
 	images {" > ${OUTPUT}
@@ -42,11 +42,11 @@ while [ -n "$1" -a -n "$2" ]; do
 	file="$1"; shift
 
 	echo \
-"		${name} {
-			description = \"${name}\";
+"		ubi-2113e3f3cc2a94e31f40d2c220669cca1b7e2845 {
+			description = \"openwrt-ipq806x-ipq40xx-ubi-root.img\";
 			data = /incbin/(\"${file}\");
-			type = \"Firmware\";
-			arch = \"ARM\";
+			type = \"firmware\";
+			arch = \"arm\";
 			compression = \"none\";
 			hash@1 {
 				algo = \"crc32\";
