@@ -28,7 +28,7 @@ ALLWIFIBOARDS:= \
 	avm_fritzrepeater-1200 \
 	linksys_ea8300 \
 	netgear_ex7500-eu \
-  netgear_ex7500-us \
+	netgear_ex7500-us \
 	qxwlan_e2600ac
 
 ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
