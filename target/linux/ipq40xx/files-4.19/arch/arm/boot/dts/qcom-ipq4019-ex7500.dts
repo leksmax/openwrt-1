@@ -553,17 +553,17 @@
 
 &wifi0 {
 	status = "okay";
-	qcom,ath10k-calibration-variant = "Netgear-EX7500";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-ETSI";
 };
 
 &wifi1 {
 	status = "okay";
 	// ieee80211-freq-limit = <5170000 5350000>;
-	qcom,ath10k-calibration-variant = "Netgear-EX7500";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-ETSI";
 };
 
 &wifi2 {
 	status = "okay";
 	// ieee80211-freq-limit = <5490000 5835000>;
-	qcom,ath10k-calibration-variant = "Netgear-EX7500";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-ETSI";
 };
