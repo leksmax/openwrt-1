@@ -44,7 +44,8 @@ netgear,ex6150v2)
 	ucidef_set_led_wlan "wlan2g" "WLAN2G" "ex61x0v2:green:router" "phy0tpt"
 	ucidef_set_led_wlan "wlan5g" "WLAN5G" "ex61x0v2:green:client" "phy1tpt"
 	;;
-netgear,ex7500)
+netgear,ex7500-eu |\
+netgear,ex7500-us)
 	ucidef_set_rssimon "wlan0" "200000" "1"
 	ucidef_set_led_rssi "rssilow-wlan0" "RSSILOW-wlan0" "ex7500:red:wifi5g" "wlan0" "1" "40" "0" "3"
 	ucidef_set_led_rssi "rssimedium-wlan0" "RSSIMEDIUM-wlan0" "ex7500:green:wifi5g" "wlan0" "20" "80" "0" "3"

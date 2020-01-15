@@ -36,7 +36,8 @@ case "$FIRMWARE" in
 		# OEM assigns 4 sequential MACs
 		ath10k_patch_mac $(macaddr_setbit_la $(macaddr_add "$(cat /sys/class/net/eth0/address)" 4))
 		;;
-	netgear,ex7500)
+	netgear,ex7500-eu |\
+	netgear,ex7500-us)
 		caldata_extract "0:ART" 0x9000 0x2f20
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary board_data 0x40) +1)
 		;;
@@ -107,7 +108,8 @@ case "$FIRMWARE" in
 		caldata_extract "ART" 0x1000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary dnidata 0x0)
 		;;
-	netgear,ex7500)
+	netgear,ex7500-eu |\
+	netgear,ex7500-us)
 		caldata_extract "0:ART" 0x1000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary board_data 0x40)
 		;;
@@ -180,7 +182,8 @@ case "$FIRMWARE" in
 		caldata_extract "ART" 0x5000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary dnidata 0xc)
 		;;
-	netgear,ex7500)
+	netgear,ex7500-eu |\
+	netgear,ex7500-us)
 		caldata_extract "0:ART" 0x5000 0x2f20
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary board_data 0x40) +2)
 		;;
