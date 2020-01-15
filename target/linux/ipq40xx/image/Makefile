@@ -377,7 +377,6 @@ define Device/netgear_ex7500-eu
 	DEVICE_VENDOR := Netgear
 	DEVICE_MODEL := EX7500
 	DEVICE_VARIANT := EU
-	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct ipq-wifi-netgear_ex7500 rssileds
 endef
 TARGET_DEVICES += netgear_ex7500-eu
 
@@ -386,7 +385,6 @@ define Device/netgear_ex7500-us
 	DEVICE_VENDOR := Netgear
 	DEVICE_MODEL := EX7500
 	DEVICE_VARIANT := US
-	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct ipq-wifi-netgear_ex7500 rssileds
 endef
 TARGET_DEVICES += netgear_ex7500-us
 

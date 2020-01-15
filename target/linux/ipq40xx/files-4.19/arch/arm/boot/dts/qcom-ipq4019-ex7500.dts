@@ -10,7 +10,7 @@
 	compatible = "netgear,ex7500";
 
 	chosen {
-		bootargs-append = " root=/dev/ubiblock0_1 rootfstype=squashfs rootwait";
+		bootargs-append = " root=/dev/ubiblock0_1 ubi.mtd=rootfs rootfstype=squashfs rootwait";
 	};
 
 	aliases {

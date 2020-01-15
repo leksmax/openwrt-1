@@ -27,8 +27,7 @@ ALLWIFIBOARDS:= \
 	aruba_ap-303 \
 	avm_fritzrepeater-1200 \
 	linksys_ea8300 \
-	netgear_ex7500-eu \
-	netgear_ex7500-us \
+	netgear_ex7500 \
 	qxwlan_e2600ac
 
 ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
@@ -95,8 +94,7 @@ endef
 $(eval $(call generate-ipq-wifi-package,aruba_ap-303,Aruba AP-303))
 $(eval $(call generate-ipq-wifi-package,avm_fritzrepeater-1200,AVM FRITZRepeater 1200))
 $(eval $(call generate-ipq-wifi-package,linksys_ea8300,Linksys EA8300))
-$(eval $(call generate-ipq-wifi-package,netgear_ex7500-eu,Netgear EX7500 EU))
-$(eval $(call generate-ipq-wifi-package,netgear_ex7500-us,Netgear EX7500 US))
+$(eval $(call generate-ipq-wifi-package,netgear_ex7500,Netgear EX7500))
 $(eval $(call generate-ipq-wifi-package,qxwlan_e2600ac,Qxwlan E2600AC))
 
 $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
