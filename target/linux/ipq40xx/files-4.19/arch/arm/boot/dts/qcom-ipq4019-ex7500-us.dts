@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "qcom-ipq4019-ex7500.dtsi"
+
+/ {
+	model = "Netgear EX7500 (US)";
+	compatible = "netgear,ex7500-us","netgear,ex7500-eu","netgear,ex7500";
+};
+
+&wifi0 {
+	status = "okay";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-FCC";
+};
+
+&wifi1 {
+	status = "okay";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-FCC";
+};
+
+&wifi2 {
+	status = "okay";
+	qcom,ath10k-calibration-variant = "Netgear-EX7500-FCC";
+};
