@@ -44,4 +44,10 @@ define Build/Compile
 		modules
 endef
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(LINUX_DIR)/include
+	$(CP) $(PKG_BUILD_DIR)/tc/inc/dsl_tc.h $(LINUX_DIR)/include/net/
+	$(CP) $(PKG_BUILD_DIR)/include/net/dc_ep.h $(LINUX_DIR)/include/net/
+endef
+
 $(eval $(call KernelPackage,ltq-vrx518))

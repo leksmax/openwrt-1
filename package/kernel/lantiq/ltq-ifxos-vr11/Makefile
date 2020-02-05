@@ -25,14 +25,14 @@ PKG_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/ltq-ifxos-vr11
-  SECTION:=sys
-  CATEGORY:=Kernel modules
-  SUBMENU:=Libraries
-  TITLE:=Lantiq OS abstraction library
-  URL:=http://www.lantiq.com/
-  DEPENDS:=
-  FILES:=$(PKG_BUILD_DIR)/src/drv_ifxos.ko
-  AUTOLOAD:=$(call AutoLoad,10,drv_ifxos)
+	SECTION:=sys
+	CATEGORY:=Kernel modules
+	SUBMENU:=Libraries
+	TITLE:=Lantiq OS abstraction library
+	URL:=http://www.lantiq.com/
+	DEPENDS:=
+	FILES:=$(PKG_BUILD_DIR)/src/drv_ifxos.ko
+	AUTOLOAD:=$(call AutoLoad,10,drv_ifxos)
 endef
 
 CONFIGURE_ARGS += \
@@ -42,13 +42,12 @@ CONFIGURE_ARGS += \
 	--enable-kernelincl="$(LINUX_DIR)/include" \
 	--with-kernel-module
 
-ifdef CONFIG_TARGET_lantiq
-  define Build/InstallDev
+define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/ifxos}
 	$(CP) $(PKG_BUILD_DIR)/src/include/* $(1)/usr/include/ifxos
 	mkdir -p $(1)/usr/lib
 	$(CP) $(PKG_BUILD_DIR)/src/libifxos.a $(1)/usr/lib/libifxos.a
-  endef
-endif
+endef
+
 
 $(eval $(call KernelPackage,ltq-ifxos-vr11))

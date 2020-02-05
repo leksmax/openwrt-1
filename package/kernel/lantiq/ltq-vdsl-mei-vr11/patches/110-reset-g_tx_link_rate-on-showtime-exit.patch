@@ -1,6 +1,6 @@
 --- a/src/drv_mei_cpe_api_atm_ptm_intern.c
 +++ b/src/drv_mei_cpe_api_atm_ptm_intern.c
-@@ -124,6 +124,9 @@ IFX_int32_t MEI_InternalXtmSwhowtimeExit
+@@ -79,6 +79,9 @@ IFX_int32_t MEI_InternalXtmSwhowtimeExit
     /* Get line number*/
     dslLineNum = pMeiDynCntrl->pMeiDev->meiDrvCntrl.dslLineNum;
  
