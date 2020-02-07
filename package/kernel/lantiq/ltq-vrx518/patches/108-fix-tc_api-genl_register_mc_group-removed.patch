@@ -1,0 +1,123 @@
+From 50e066a4e9ef7e1fec52460658b53495d38f0b1a Mon Sep 17 00:00:00 2001
+From: Davide Fioravanti <pantanastyle@gmail.com>
+Date: Thu, 6 Feb 2020 20:42:53 +0100
+Subject: [PATCH] fix tc_api genl_register_mc_group removed
+
+Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+---
+ tc/tc_api.c | 57 ++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 37 insertions(+), 20 deletions(-)
+
+diff --git a/tc/tc_api.c b/tc/tc_api.c
+index 1632929..600ec58 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/tc_api.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/tc_api.c
+@@ -53,28 +53,45 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+ #define VRX518_PPE_FW_ID		0xB
+ #define MD5_LEN				16
+ 
+-/* TC message genelink family */
+-static struct genl_family tc_gnl_family = {
+-	// .id = GENL_ID_GENERATE,	/* To generate an id for the family*/
+-	.hdrsize = 0,
+-	.name = TC_FAMILY_NAME,	/*family name, used by userspace application*/
+-	.version = 1,		/*version number  */
+-	.maxattr = TC_A_MAX - 1,
+-};
+ 
++// ORIGINALE
+ // /* TC message multicast group */
+ // static struct genl_multicast_group tc_ml_grp = {
+ // 	.name = TC_MCAST_GRP_NAME,
+ // };
+ 
++//VERSIONE VECCHIA
++// /* multicast group */
++// enum tcmu_multicast_groups {
++// 	TCMU_MCGRP_CONFIG,
++// };
++
++// /* TC message multicast group */
++// static const struct genl_multicast_group tcmu_mcgrps[] = {
++// 	[TCMU_MCGRP_CONFIG] = { .name = "config", },
++// };
++
++//QUESTA POTREBBE ESSERE BUONA
+ /* multicast group */
+-enum tcmu_multicast_groups {
+-	TCMU_MCGRP_CONFIG,
+-};
++// enum tcmu_multicast_groups {
++// 	TC_MCAST_GRP_NAME,
++// };
+ 
+ /* TC message multicast group */
+ static const struct genl_multicast_group tcmu_mcgrps[] = {
+-	[TCMU_MCGRP_CONFIG] = { .name = "config", },
++	[0] = { .name = TC_MCAST_GRP_NAME, },
++};
++
++
++/* TC message genelink family */
++static struct genl_family tc_gnl_family = {
++	// .id = GENL_ID_GENERATE,	/* To generate an id for the family*/
++	.hdrsize = 0,
++	.name = TC_FAMILY_NAME,	/*family name, used by userspace application*/
++	.version = 1,		/*version number  */
++	.maxattr = TC_A_MAX - 1,
++	.mcgrps		= tcmu_mcgrps,
++	.n_mcgrps	= ARRAY_SIZE(tcmu_mcgrps),
+ };
+ 
+ /**
+@@ -579,7 +596,7 @@ int tc_ntlk_msg_send(struct tc_priv *priv, int pid, int tc_mode, int tc_action,
+ 	nla_put_u32(skb, TC_A_LINENO, ln_no);
+ 
+ 	genlmsg_end(skb, msg_head);
+-	ret = genlmsg_multicast(&tc_gnl_family, skb, pid, TCMU_MCGRP_CONFIG, GFP_KERNEL);
++	ret = genlmsg_multicast(&tc_gnl_family, skb, pid, 0, GFP_KERNEL);
+ 	if (ret) {
+ 		tc_err(priv, MSG_EVENT, "Sent TC multicast message Fail!\n");
+ 		goto err1;
+@@ -601,21 +618,21 @@ int tc_gentlk_init(struct tc_priv *priv)
+ 		return ret;
+ 	}
+ 
+-	ret = genl_register_mc_group(&tc_gnl_family, &tc_ml_grp);
+-	if (ret) {
+-		tc_err(priv, MSG_EVENT, "register mc group fail: %i, grp name: %s\n",
+-			ret, tc_ml_grp.name);
+-		genl_unregister_family(&tc_gnl_family);
+-		return ret;
+-	}
++	// ret = genl_register_mc_group(&tc_gnl_family, &tc_ml_grp);
++	// if (ret) {
++	// 	tc_err(priv, MSG_EVENT, "register mc group fail: %i, grp name: %s\n",
++	// 		ret, tc_ml_grp.name);
++	// 	genl_unregister_family(&tc_gnl_family);
++	// 	return ret;
++	// }
+ 
+ 	return 0;
+ }
+ 
+ void tc_gentlk_exit(void)
+ {
+-	/* unregister mc groups */
+-	genl_unregister_mc_group(&tc_gnl_family, &tc_ml_grp);
++	// /* unregister mc groups */
++	// genl_unregister_mc_group(&tc_gnl_family, &tc_ml_grp);
+ 	/*unregister the family*/
+ 	genl_unregister_family(&tc_gnl_family);
+ }
+@@ -677,7 +694,7 @@ void dump_skb_info(struct tc_priv *tcpriv, struct sk_buff *skb, u32 msg_type)
+ 		(u32)skb->end, skb->len);
+ 	tc_dbg(tcpriv, type,
+ 		"skb: clone: %d, users: %d\n",
+-		skb->cloned, atomic_read(&skb->users));
++		skb->cloned, refcount_read(&skb->users));
+ 	tc_dbg(tcpriv, type,
+ 		"skb: nfrag: %d\n", skb_shinfo(skb)->nr_frags);
+ 
+-- 
+2.24.0

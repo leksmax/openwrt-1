@@ -1,0 +1,65 @@
+From 17ebb9a8ff7b250b77069e2671e91d080f707f32 Mon Sep 17 00:00:00 2001
+From: Davide Fioravanti <pantanastyle@gmail.com>
+Date: Thu, 6 Feb 2020 03:43:32 +0100
+Subject: [PATCH] Fixed error: conflicting types for '__skb_put_padto'
+
+Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+---
+ tc/atm_tc.c     |  2 +-
+ tc/inc/tc_api.h | 13 -------------
+ tc/ptm_tc.c     |  2 +-
+ 3 files changed, 2 insertions(+), 15 deletions(-)
+
+diff --git a/tc/atm_tc.c b/tc/atm_tc.c
+index 1529584..34efe43 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/atm_tc.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/atm_tc.c
+@@ -1342,7 +1342,7 @@ static int ppe_send(struct atm_vcc *vcc, struct sk_buff *skb)
+ 	}
+ 
+ 	/* assume LLC header + Ethernet ID: 6+2 */
+-	if (__skb_put_padto(skb, ETH_ZLEN + 8))
++	if (__skb_put_padto(skb, ETH_ZLEN + 8, true))
+ 		goto CHECK_SHOWTIME_FAIL;
+ 
+ 	dump_skb_info(priv->tc_priv, skb, (MSG_TX | MSG_TXDATA));
+diff --git a/tc/inc/tc_api.h b/tc/inc/tc_api.h
+index 12b2910..77da55d 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/inc/tc_api.h
++++ ltq-vrx518-2018-12-06-0a301512/tc/inc/tc_api.h
+@@ -196,19 +196,6 @@ static inline void aca_ring_addr_init(struct dc_ep_dev *ep_dev,
+ 	ring->aca_cnt_phyaddr = ep_dev->phy_membase + addr;
+ }
+ 
+-static inline int __skb_put_padto(struct sk_buff *skb, unsigned int len)
+-{
+-	unsigned int size = skb->len;
+-
+-	if (unlikely(size < len)) {
+-		len -= size;
+-		if (skb_pad(skb, len))
+-			return -ENOMEM;
+-		__skb_put(skb, len);
+-	}
+-	return 0;
+-}
+-
+ extern int showtime_stat(struct tc_priv *);
+ extern void dump_skb_info(struct tc_priv *, struct sk_buff *, u32);
+ extern void *tc_buf_alloc(void *, size_t, u32 *,
+diff --git a/tc/ptm_tc.c b/tc/ptm_tc.c
+index 630d18b..07a1c81 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/ptm_tc.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/ptm_tc.c
+@@ -532,7 +532,7 @@ static int ptm_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (!showtime_stat(ptm_tc->tc_priv))
+ 		goto PTM_XMIT_DROP;
+ 
+-	if (__skb_put_padto(skb, ETH_ZLEN))
++	if (__skb_put_padto(skb, ETH_ZLEN, true))
+ 		goto PTM_XMIT_DROP;
+ 
+ 	dump_skb_info(ptm_tc->tc_priv, skb, (MSG_TX | MSG_TXDATA));
+-- 
+2.24.0
+

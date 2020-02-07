@@ -63,7 +63,7 @@ CONFIGURE_ARGS += --enable-kernel-include="$(LINUX_DIR)/include" \
 	--enable-linux-26 \
 	--enable-kernelbuild="$(LINUX_DIR)" \
 	--enable-debug-prints=no \
-	ARCH=mips
+	ARCH=arm
 
 CONFIGURE_ARGS += --enable-model=full
 #CONFIGURE_ARGS += --enable-model=lite

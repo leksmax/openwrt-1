@@ -1,0 +1,93 @@
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/atm_tc.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/atm_tc.c
+@@ -83,6 +83,11 @@
+ #ifdef OAM_POLLING
+ struct task_struct *task;
+ #endif
++
++#define ATM_VBR_NRT     ATM_VBR
++#define ATM_VBR_RT      6
++#define ATM_UBR_PLUS    7
++#define ATM_GFR         8
+ 
+ static inline unsigned int pvc_num(void)
+ {
+@@ -2560,9 +2560,9 @@
+ {
+ 	int i, err;
+ 	struct atm_dev *dev;
+-	dev = atm_dev_register(g_atm_dev_name,
+-		atm_priv->tc_priv->ep_dev[ep_id].dev,
+-		&g_ppe_atm_ops, -1, NULL);
++	dev = NULL; //dev = atm_dev_register(g_atm_dev_name,
++	//	atm_priv->tc_priv->ep_dev[ep_id].dev,
++	//	&g_ppe_atm_ops, -1, NULL); //idk but atm_dev_register is undefined
+ 	if (!dev) {
+ 		err = -EIO;
+ 		goto ATM_DEV_REGISTER_FAIL;
+@@ -2596,7 +2596,7 @@
+ 	pr_err("ATM device registration fail\n");
+ 	for (i = 0; i < ATM_PORT_NUMBER; i++)
+ 		if (atm_priv->port[i].dev)
+-			atm_dev_deregister(atm_priv->port[i].dev);
++			//atm_dev_deregister(atm_priv->port[i].dev);//idk but atm_dev_deregister is undefined
+ 
+ 	return err;
+ }
+@@ -2607,7 +2607,7 @@
+ 
+ 	for (i = 0; i < ATM_PORT_NUMBER; i++)
+ 		if (atm_priv->port[i].dev)
+-			atm_dev_deregister(atm_priv->port[i].dev);
++			//atm_dev_deregister(atm_priv->port[i].dev);//idk but atm_dev_deregister is undefined
+ 
+ 	return 0;
+ }
+@@ -3232,7 +3232,7 @@
+ 			"invalid conn: %d or NULL Vcc\n", conn);
+ 	} else {
+ 		vcc = priv->conn[conn].vcc;
+-		if (atm_charge(vcc, skb->truesize)) {
++		if (1==2) { //idk but atm_charge is undefined
+ 
+ 			if (vcc->stats)
+ 				atomic_inc(&vcc->stats->rx);
+@@ -3347,7 +3347,7 @@
+ 		"ATM line[%d]:enter showtime, cell rate: 0 - %d, 1 - %d\n",
+      		idx, priv->port[0].tx_max_cell_rate,
+ 		priv->port[1].tx_max_cell_rate);
+-	atm_dev_signal_change(priv->port[idx].dev, ATM_PHY_SIG_FOUND);
++	//atm_dev_signal_change(priv->port[idx].dev, ATM_PHY_SIG_FOUND); //idk but atm_dev_signal_change is undefined
+ 	return 0;
+ }
+ 
+@@ -3383,7 +3383,7 @@
+ 
+ 	tc_info(priv->tc_priv, MSG_EVENT, "Line[%d]: show time exit!\n", idx);
+ 
+-	atm_dev_signal_change(priv->port[idx].dev, ATM_PHY_SIG_LOST);
++	//atm_dev_signal_change(priv->port[idx].dev, ATM_PHY_SIG_LOST); //idk but atm_dev_signal_change is undefined
+ 	priv->ep->hw_ops->aca_stop(priv->ep, &stop, 0);
+ 	/* Stop TXIN traffic, then wait for PPE FW signal */
+ 	atm_ppe_wakeup(priv);
+@@ -3446,7 +3446,7 @@
+ 	qsb_global_set(priv);
+ 	setup_oam_htu_entry(priv);
+ 
+-	atm_hook_mpoa_setup = mpoa_setup;
++	//atm_hook_mpoa_setup = mpoa_setup; //idk but atm_hook_mpoa_setup is undefined
+ 	atm_cb_setup(priv, 1);
+ 
+ 	return 0;
+#--- a/include/uapi/linux/atm.h
+#+++ b/include/uapi/linux/atm.h
+#@@ -140,6 +140,9 @@ struct atm_trafprm {
+# 	int		min_pcr;	/* minimum PCR in cells per second */
+# 	int		max_cdv;	/* maximum CDV in microseconds */
+# 	int		max_sdu;	/* maximum SDU in bytes */
+#+	int		scr;		/* sustained rate in cells per second */
+#+	int		mbs;		/* maximum burst size (MBS) in cells */
+#+	int		cdv;		/* Cell delay varition */
+#         /* extra params for ABR */
+#         unsigned int 	icr;         	/* Initial Cell Rate (24-bit) */
+#         unsigned int	tbe;		/* Transient Buffer Exposure (24-bit) */ 

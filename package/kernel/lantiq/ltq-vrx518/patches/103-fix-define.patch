@@ -1,0 +1,11 @@
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/ptm_tc.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/ptm_tc.c
+@@ -645,7 +645,7 @@ static int ppe_send(struct atm_vcc *vcc, struct sk_buff *skb)
+ {
+ 	ptm_irq_set(irq_id, 0);
+ }
+-
++#define IFF_PTM_DATAPATH 0x800000
+ static void ptm_setup(struct net_device *dev)
+ {
+ 	ether_setup(dev);

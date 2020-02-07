@@ -18,14 +18,19 @@ include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
 
 VRX518_MAKEDEFS += CONFIG_VRX518=m
+VRX518_MAKEDEFS += CONFIG_VRX518_TC=m
+VRX518_MAKEDEFS += CONFIG_VRX518_CPU=m
 
 define KernelPackage/ltq-vrx518
   SECTION:=sys
   SUBMENU:=Network Devices
   TITLE:=PCIe driver for Intel VRX518
   FILES:=\
-	$(PKG_BUILD_DIR)/vrx518.ko
-  AUTOLOAD:=$(call AutoProbe,vrx518)
+	$(PKG_BUILD_DIR)/vrx518.ko \
+	$(PKG_BUILD_DIR)/tc/vrx518_tc.ko
+  AUTOLOAD:=\
+  	$(call AutoLoad,40,vrx518) \
+  	$(call AutoLoad,41,vrx518_tc)
 endef
 
 NOSTDINC_FLAGS = \

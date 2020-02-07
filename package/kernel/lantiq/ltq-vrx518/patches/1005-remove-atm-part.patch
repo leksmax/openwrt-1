@@ -1,0 +1,26 @@
+From c7cc0a0f0cc50f3e72540b5351293ee25fe48c0b Mon Sep 17 00:00:00 2001
+From: Davide Fioravanti <pantanastyle@gmail.com>
+Date: Thu, 6 Feb 2020 04:54:13 +0100
+Subject: [PATCH] Remove atm part
+
+Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+---
+ tc/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tc/Makefile b/tc/Makefile
+index 3c7c009..07bfd3e 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/Makefile
++++ ltq-vrx518-2018-12-06-0a301512/tc/Makefile
+@@ -26,7 +26,7 @@
+ #
+ 
+ obj-$(CONFIG_VRX518_TC) += vrx518_tc.o
+-vrx518_tc-objs := ptm_tc.o atm_tc.o tc_api.o tc_proc.o tc_main.o
++vrx518_tc-objs := ptm_tc.o atm_tc.o tc_api.o tc_proc.o tc_main.o # atm_tc.o #stava dopo ptm_tc.o
+ 
+ ifneq ($(CONFIG_VRX518_CPU),)
+ vrx518_tc-objs += platform/sw_plat.o
+-- 
+2.24.0
+

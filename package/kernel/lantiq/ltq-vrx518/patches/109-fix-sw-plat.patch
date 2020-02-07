@@ -1,0 +1,114 @@
+
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/platform/sw_plat.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/platform/sw_plat.c
+@@ -38,10 +38,10 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+ #include <linux/printk.h>
+ #include <linux/etherdevice.h>
+ #include <linux/workqueue.h>
+-#include "inc/dsl_tc.h"
+-
+-#include "../inc/tc_main.h"
+-#include "../inc/reg_addr.h"
++#include "tc/inc/dsl_tc.h"
++#include "tc/inc/tc_main.h"
++#include "tc/inc/reg_addr.h"
++#include "tc/inc/tc_common.h"
+ 
+ 
+ #define PMAC_SIZE		8
+@@ -425,7 +425,7 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+ 	}
+ 	dma_unmap_single(pdev, phy_addr, size, dir);
+ 
+-	pr_info("vaddr: 0x%x, phyaddr: 0x%lx\n", (u32)mem, phy_addr);
++	pr_info("vaddr: 0x%x, phyaddr: 0x%lx\n", (u32)mem, (long unsigned int)phy_addr);
+ 	addr1 = (u32)phy_addr;
+ 
+ 	if (addr)
+@@ -863,33 +863,33 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+ {
+ 	struct plat_priv *priv = g_plat_priv;
+ 
+-	/* TXIN */
+-	cfg->txin_dbase = priv->soc_rings.txin.dbase_phymem;
+-	cfg->txin_dnum = priv->soc_rings.txin.dnum;
+-	cfg->txin_desc_dwsz = DW_SZ(struct dma_desc);
+-	cfg->txin_cnt_phyaddr = priv->soc_rings.txin.cnt_phyaddr;
+-	/* TXOUT */
+-	cfg->txout_dbase = priv->soc_rings.txout.dbase_phymem;
+-	cfg->txout_dnum = priv->soc_rings.txout.dnum;
+-	cfg->txout_desc_dwsz = DW_SZ(struct dma_desc);
+-	cfg->txout_cnt_phyaddr = priv->soc_rings.txout.cnt_phyaddr;
+-	/* RXOUT */
+-	cfg->rxout_dbase = priv->soc_rings.rxout.dbase_phymem;
+-	cfg->rxout_dnum = priv->soc_rings.rxout.dnum;
+-	cfg->rxout_desc_dwsz = DW_SZ(struct dma_desc);
+-	cfg->rxout_cnt_phyaddr = priv->soc_rings.rxout.cnt_phyaddr;
+-	/* RXIN */
+-	cfg->rxin_dbase = priv->soc_rings.rxin.dbase_phymem;
+-	cfg->rxin_dnum = priv->soc_rings.rxin.dnum;
+-	cfg->rxin_desc_dwsz = DW_SZ(struct dma_desc);
+-	cfg->rxin_cnt_phyaddr = priv->soc_rings.rxin.cnt_phyaddr;
+-
+-	tc_info(priv->tc_priv, MSG_INIT,
+-		"id: %d, txin(0x%x: %d, 0x%x), txout(0x%x: %d, 0x%x), rxin(0x%x: %d, 0x%x), rxout(0x%x: %d, 0x%x)\n",
+-		id, cfg->txin_dbase, cfg->txin_dnum, cfg->txin_cnt_phyaddr,
+-		cfg->txout_dbase, cfg->txout_dnum, cfg->txout_cnt_phyaddr,
+-		cfg->rxin_dbase, cfg->rxout_dnum, cfg->rxin_cnt_phyaddr,
+-		cfg->rxout_dbase, cfg->rxout_dnum, cfg->rxout_cnt_phyaddr);
++//	/* TXIN */
++//	cfg->txin_dbase = priv->soc_rings.txin.dbase_phymem;
++//	cfg->txin_dnum = priv->soc_rings.txin.dnum;
++//	cfg->txin_desc_dwsz = DW_SZ(struct dma_desc);
++//	cfg->txin_cnt_phyaddr = priv->soc_rings.txin.cnt_phyaddr;
++//	/* TXOUT */
++//	cfg->txout_dbase = priv->soc_rings.txout.dbase_phymem;
++//	cfg->txout_dnum = priv->soc_rings.txout.dnum;
++//	cfg->txout_desc_dwsz = DW_SZ(struct dma_desc);
++//	cfg->txout_cnt_phyaddr = priv->soc_rings.txout.cnt_phyaddr;
++//	/* RXOUT */
++//	cfg->rxout_dbase = priv->soc_rings.rxout.dbase_phymem;
++//	cfg->rxout_dnum = priv->soc_rings.rxout.dnum;
++//	cfg->rxout_desc_dwsz = DW_SZ(struct dma_desc);
++//	cfg->rxout_cnt_phyaddr = priv->soc_rings.rxout.cnt_phyaddr;
++//	/* RXIN */
++//	cfg->rxin_dbase = priv->soc_rings.rxin.dbase_phymem;
++//	cfg->rxin_dnum = priv->soc_rings.rxin.dnum;
++//	cfg->rxin_desc_dwsz = DW_SZ(struct dma_desc);
++//	cfg->rxin_cnt_phyaddr = priv->soc_rings.rxin.cnt_phyaddr;
++//
++//	tc_info(priv->tc_priv, MSG_INIT,
++//		"id: %d, txin(0x%x: %d, 0x%x), txout(0x%x: %d, 0x%x), rxin(0x%x: %d, 0x%x), rxout(0x%x: %d, 0x%x)\n",
++//		id, cfg->txin_dbase, cfg->txin_dnum, cfg->txin_cnt_phyaddr,
++//		cfg->txout_dbase, cfg->txout_dnum, cfg->txout_cnt_phyaddr,
++//		cfg->rxin_dbase, cfg->rxout_dnum, cfg->rxin_cnt_phyaddr,
++//		cfg->rxout_dbase, cfg->rxout_dnum, cfg->rxout_cnt_phyaddr);
+ 
+ 	return 0;
+ }
+@@ -984,11 +984,11 @@ static void plat_tc_ops_setup(struct tc_priv *priv)
+ static void plat_tc_ops_setup(struct tc_priv *priv)
+ {
+ 	priv->tc_ops.send = plat_send;
+-	priv->tc_ops.alloc = plat_mem_alloc;
+-	priv->tc_ops.free = plat_mem_free;
+-	priv->tc_ops.dev_reg = plat_open;
+-	priv->tc_ops.dev_unreg = plat_close;
+-	priv->tc_ops.umt_init = plat_umt_init;
++   priv->tc_ops.alloc = NULL;
++	priv->tc_ops.free = plat_mem_free;
++	priv->tc_ops.dev_reg = NULL;
++	priv->tc_ops.dev_unreg = NULL;
++	priv->tc_ops.umt_init = plat_umt_init;
+ 	priv->tc_ops.umt_exit = plat_umt_exit;
+ 	priv->tc_ops.umt_start = plat_umt_start;
+ 	priv->tc_ops.soc_cfg_get = plat_soc_cfg_get;
+#@@ -900,7 +900,7 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+# 	return 0;
+# }
+# 
+#-static void plat_close(struct net_device *pdev, char *dev_name,
+#+static void plat_close(struct net_device *pdev, const char *dev_name,
+# 		int subif, int flag)
+# {
+# 	return;

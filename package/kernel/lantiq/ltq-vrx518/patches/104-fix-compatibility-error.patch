@@ -1,0 +1,35 @@
+From b132526d7752431fbc56df9aea441f4cdd3a3fc5 Mon Sep 17 00:00:00 2001
+From: Davide Fioravanti <pantanastyle@gmail.com>
+Date: Thu, 6 Feb 2020 04:33:37 +0100
+Subject: [PATCH] Fix compatibility error
+
+Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+---
+ tc/ptm_tc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tc/ptm_tc.c b/tc/ptm_tc.c
+index 07a1c81..6ab0b26 100644
+--- ltq-vrx518-2018-12-06-0a301512.orig/tc/ptm_tc.c
++++ ltq-vrx518-2018-12-06-0a301512/tc/ptm_tc.c
+@@ -211,7 +211,7 @@ static int get_netif_qid_with_pkt(struct sk_buff *skb, void *arg, int is_atm_vcc
+ }
+ #endif
+ 
+-static struct rtnl_link_stats64 *ptm_get_stats(struct net_device *dev,
++static void ptm_get_stats(struct net_device *dev,
+ 					struct rtnl_link_stats64 *storage)
+ {
+ 	struct ptm_priv *ptm_tc = netdev_priv(dev);
+@@ -221,7 +221,7 @@ static struct rtnl_link_stats64 *ptm_get_stats(struct net_device *dev,
+ 	else
+ 		storage->tx_errors += ptm_tc->stats64.tx_errors;
+ 
+-	return storage;
++	//return storage;
+ }
+ 
+ static int ptm_set_mac_address(struct net_device *dev, void *p)
+-- 
+2.24.0
+
