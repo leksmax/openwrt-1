@@ -1,0 +1,12 @@
+--- /dcdp/tc_api.c
++++ /dcdp/tc_api.c
+@@ -949,7 +949,8 @@
+ 	md5 = crypto_alloc_shash("md5", 0, 0);
+ 
+ 	if (IS_ERR(md5)) {
+-		tc_err(priv, MSG_INIT, "alloc shash md5 fail\n");
++		tc_err(priv, MSG_INIT, "alloc shash md5 fail. Handle: %ld\n", PTR_ERR(md5));
++		return 0;
+ 		ret = -ENOMEM;
+ 		goto __alloc_alg_fail;
+ 	}

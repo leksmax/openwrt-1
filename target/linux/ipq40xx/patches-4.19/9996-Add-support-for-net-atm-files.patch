@@ -1,0 +1,84 @@
+--- a/net/atm/br2684.c
++++ b/net/atm/br2684.c
+@@ -38,7 +38,10 @@ static void skb_debug(const struct sk_buff *skb)
+ #endif
+ }
+ 
++#define BR2684_LLC_LEN         3
++#define BR2684_SNAP_LEN        3
+ #define BR2684_ETHERTYPE_LEN	2
++#define BR2684_PID_LEN		2
+ #define BR2684_PAD_LEN		2
+ 
+ #define LLC		0xaa, 0xaa, 0x03
+@@ -596,6 +599,11 @@ static int br2684_regvcc(struct atm_vcc *atmvcc, void __user * arg)
+ 	atmvcc->push = br2684_push;
+ 	atmvcc->pop = br2684_pop;
+ 	atmvcc->release_cb = br2684_release_cb;
++//#if IS_ENABLED(CONFIG_VRX518_TC)
++	if (atm_hook_mpoa_setup) /* IPoA or EoA w/o FCS */
++		atm_hook_mpoa_setup(atmvcc, brdev->payload == p_routed ? 3 : 0,
++			brvcc->encaps == BR2684_ENCAPS_LLC ? 1 : 0, net_dev);
++//#endif
+ 	atmvcc->owner = THIS_MODULE;
+ 
+ 	/* initialize netdev carrier state */
+--- a/net/atm/common.c
++++ b/net/atm/common.c
+@@ -136,6 +136,11 @@ static struct proto vcc_proto = {
+ 	.release_cb = vcc_release_cb,
+ };
+ 
++//#if IS_ENABLED(CONFIG_VRX518_TC)
++void (*atm_hook_mpoa_setup)(struct atm_vcc *, int, int, struct net_device *) = NULL;
++EXPORT_SYMBOL(atm_hook_mpoa_setup);
++//#endif
++
+ int vcc_create(struct net *net, struct socket *sock, int protocol, int family, int kern)
+ {
+ 	struct sock *sk;
+diff --git a/net/atm/common.h b/net/atm/common.h
+index 959436b87182..6ac04016ced1 100644
+--- a/net/atm/common.h
++++ b/net/atm/common.h
+@@ -52,5 +52,10 @@ static inline void atm_proc_exit(void)
+ int svc_change_qos(struct atm_vcc *vcc,struct atm_qos *qos);
+ 
+ void atm_dev_release_vccs(struct atm_dev *dev);
++//#if IS_ENABLED(CONFIG_VRX318_DATAPATH) || IS_ENABLED(CONFIG_VRX518_TC) \
++	|| IS_ENABLED(CONFIG_LTQ_PPA_A1)
++extern void (*atm_hook_mpoa_setup)(struct atm_vcc *, int, int, struct net_device *);
++//#endif
++
+ 
+ #endif
+--- a/net/atm/mpc.c
++++ b/net/atm/mpc.c
+@@ -30,6 +30,7 @@
+ /* Modular too */
+ #include <linux/module.h>
+ 
++#include "common.h"
+ #include "lec.h"
+ #include "mpc.h"
+ #include "resources.h"
+@@ -601,7 +602,6 @@ static netdev_tx_t mpc_send_packet(struct sk_buff *skb,
+ non_ip:
+ 	return __netdev_start_xmit(mpc->old_ops, skb, dev, false);
+ }
+-
+ static int atm_mpoa_vcc_attach(struct atm_vcc *vcc, void __user *arg)
+ {
+ 	int bytes_left;
+@@ -644,7 +644,10 @@ static int atm_mpoa_vcc_attach(struct atm_vcc *vcc, void __user *arg)
+ 
+ 	vcc->proto_data = mpc->dev;
+ 	vcc->push = mpc_push;
+-
++//#if IS_ENABLED(CONFIG_VRX518_TC)
++   if (atm_hook_mpoa_setup) /* IPoA, LLC */
++       atm_hook_mpoa_setup(vcc, 3, 1, mpc->dev);
++//#endif
+ 	return 0;
+ }
+ 

@@ -8,12 +8,12 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=ltq-vdsl-app
-PKG_VERSION:=4.17.18.6
-PKG_RELEASE:=3
+PKG_VERSION:=4.19.3
+PKG_RELEASE:=4
 PKG_BASE_NAME:=dsl_cpe_control
 PKG_SOURCE:=$(PKG_BASE_NAME)_vrx-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://mirror2.openwrt.org/sources
-PKG_HASH:=da8bb929526a61aea0e153ef524331fcd472a1ebbc6d88ca017735a4f82ece02
+PKG_SOURCE_URL:=https://sources.openwrt.org/
+PKG_HASH:=d89a2db8a75cdfff77ad568fda5e56407b0df057e9b147df203f1f8587b5b0f8
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=BSD-2-Clause
 
@@ -24,20 +24,43 @@ PKG_FLAGS:=nonshared
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ltq-vdsl-app
-  SECTION:=net
-  CATEGORY:=Network
-  TITLE:=Lantiq VDSL userland tool
-  URL:=http://www.lantiq.com/
-  DEPENDS:=@TARGET_lantiq_xrx200 +libpthread +librt
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=Lantiq VDSL userland tool
+	URL:=http://www.lantiq.com/
+	DEPENDS:=@TARGET_lantiq_xrx200||TARGET_ipq40xx +libpthread +librt
 endef
 
 define Package/ltq-vdsl-app/description
-  Userland tool needed to control Lantiq VDSL CPE
+	Userland tool needed to control Lantiq VDSL CPE
+endef
+
+define Package/ltq-vdsl-app/config
+	choice
+		prompt "Device selection"
+		depends on PACKAGE_ltq-vdsl-app
+		default VR9
+
+		config VR9
+			bool "VRX200 Family"
+
+		config VR10
+			bool "VRX300 Family"
+			depends on (TARGET_ipq80xx||TARGET_ipq40xx)
+
+		config VR10_320
+			bool "VRX320 Family"
+			depends on (TARGET_ipq80xx||TARGET_ipq40xx)
+
+		config VR11
+			bool "VRX500 Family"
+			depends on (TARGET_ipq80xx||TARGET_ipq40xx)
+
+	endchoice
 endef
 
 CONFIGURE_ARGS += \
 	--enable-vrx \
-	--enable-vrx-device=vr9 \
 	--enable-driver-include="-I$(STAGING_DIR)/usr/include/drv_vdsl_cpe_api" \
 	--enable-device-driver-include="-I$(STAGING_DIR)/usr/include/vdsl/" \
 	--enable-ifxos \
@@ -47,6 +70,18 @@ CONFIGURE_ARGS += \
 	--enable-debug \
 	--disable-dti \
 	--with-channels-per-line="1" \
+
+ifeq ($(CONFIG_VR9),y)
+	CONFIGURE_ARGS += --enable-vrx-device=vr9
+else ifeq ($(CONFIG_VR10),y)
+	CONFIGURE_ARGS += --enable-vrx-device=vr10
+else ifeq ($(CONFIG_VR10_320),y)
+	CONFIGURE_ARGS += --enable-vrx-device=vr10_320
+else ifeq ($(CONFIG_VR11),y)
+	CONFIGURE_ARGS += --enable-vrx-device=vr11
+else
+	CONFIGURE_ARGS += --enable-vrx-device=vr9
+endif
 
 #CONFIGURE_ARGS += --enable-model=full
 #CONFIGURE_ARGS += --enable-model=lite

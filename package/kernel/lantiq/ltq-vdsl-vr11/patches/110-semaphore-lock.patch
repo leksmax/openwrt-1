@@ -1,0 +1,11 @@
+--- a/src/pm/drv_dsl_cpe_pm_core.c
++++ b/src/pm/drv_dsl_cpe_pm_core.c
+@@ -1147,7 +1147,7 @@ DSL_Error_t DSL_DRV_PM_Lock(DSL_Context_
+ 
+          return DSL_ERR_SEMAPHORE_GET;
+       }
+-      /* Lock PM module Near-End Mutex*/
++      /* Lock PM module Far-End Mutex*/
+       if( down_interruptible(&(DSL_DRV_PM_CONTEXT(pContext)->pmFeMutex)) )
+       {
+          DSL_DEBUG( DSL_DBG_ERR,

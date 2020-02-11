@@ -1,0 +1,56 @@
+From b6fc52e8cf741807932ea21345db076919fef4b0 Mon Sep 17 00:00:00 2001
+From: Davide Fioravanti <pantanastyle@gmail.com>
+Date: Thu, 6 Feb 2020 05:30:28 +0100
+Subject: [PATCH] Fix compatibility tc_api.c
+
+Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+---
+ tc/tc_api.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/tc/tc_api.c b/tc/tc_api.c
+index f6c91e1..1632929 100644
+--- /dcdp/tc_api.c
++++ /dcdp/tc_api.c
+@@ -55,16 +55,26 @@ static const char ppe_fw_name[] = "ppe_fw.bin";
+ 
+ /* TC message genelink family */
+ static struct genl_family tc_gnl_family = {
+-	.id = GENL_ID_GENERATE,	/* To generate an id for the family*/
++	// .id = GENL_ID_GENERATE,	/* To generate an id for the family*/
+ 	.hdrsize = 0,
+ 	.name = TC_FAMILY_NAME,	/*family name, used by userspace application*/
+ 	.version = 1,		/*version number  */
+ 	.maxattr = TC_A_MAX - 1,
+ };
+ 
++// /* TC message multicast group */
++// static struct genl_multicast_group tc_ml_grp = {
++// 	.name = TC_MCAST_GRP_NAME,
++// };
++
++/* multicast group */
++enum tcmu_multicast_groups {
++	TCMU_MCGRP_CONFIG,
++};
++
+ /* TC message multicast group */
+-static struct genl_multicast_group tc_ml_grp = {
+-	.name = TC_MCAST_GRP_NAME,
++static const struct genl_multicast_group tcmu_mcgrps[] = {
++	[TCMU_MCGRP_CONFIG] = { .name = "config", },
+ };
+ 
+ /**
+@@ -569,7 +579,7 @@ int tc_ntlk_msg_send(struct tc_priv *priv, int pid, int tc_mode, int tc_action,
+ 	nla_put_u32(skb, TC_A_LINENO, ln_no);
+ 
+ 	genlmsg_end(skb, msg_head);
+-	ret = genlmsg_multicast(skb, pid, tc_ml_grp.id, GFP_KERNEL);
++	ret = genlmsg_multicast(&tc_gnl_family, skb, pid, TCMU_MCGRP_CONFIG, GFP_KERNEL);
+ 	if (ret) {
+ 		tc_err(priv, MSG_EVENT, "Sent TC multicast message Fail!\n");
+ 		goto err1;
+-- 
+2.24.0
+

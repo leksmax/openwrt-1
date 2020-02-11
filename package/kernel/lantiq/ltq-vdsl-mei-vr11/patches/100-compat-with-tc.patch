@@ -1,0 +1,25 @@
+--- a/src/drv_mei_cpe_common.c
++++ b/src/drv_mei_cpe_common.c
+@@ -19,7 +19,6 @@
+ /* get at first the driver configuration */
+ #include "drv_mei_cpe_config.h"
+ 
+-#include "ifx_types.h"
+ #include "drv_mei_cpe_os.h"
+ #include "drv_mei_cpe_dbg.h"
+ 
+--- a/src/drv_mei_cpe_linux.h
++++ b/src/drv_mei_cpe_linux.h
+@@ -57,12 +57,6 @@
+ #include <linux/poll.h>
+ #include <linux/types.h>
+ 
+-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,10,0))
+-   #include <asm/ifx/ifx_types.h>
+-#else
+-   #include <ifx_types.h>
+-#endif
+-
+ #endif /* #if (MEI_DRV_IFXOS_ENABLE == 0)*/
+ 
+ #include <linux/dma-mapping.h>
