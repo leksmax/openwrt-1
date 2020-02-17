@@ -23,6 +23,10 @@ define KernelPackage/ltq-vrx518-ep
 	SECTION:=sys
 	SUBMENU:=Network Devices
 	TITLE:=PCIe driver for Intel VRX518
+	KCONFIG:= \
+		CONFIG_VRX518=m \
+		CONFIG_VRX518_PCIE_SWITCH_BONDING=y \
+		CONFIG_TEST=m
 	FILES:=\
 		$(PKG_BUILD_DIR)/vrx518.ko
 	AUTOLOAD:=$(call AutoLoad,25,vrx518)

@@ -37,7 +37,7 @@ define KernelPackage/ltq-vrx518-tc-drv
 		CONFIG_ATM_MPOA=y \
 		CONFIG_ATM_BR2684_MINI_JUMBO_FRAME_SUPPORT=y \
 		CONFIG_LTQ_DATAPATH_ACA_CSUM_WORKAROUND=y
-	DEPENDS:=@TARGET_ipq40xx +kmod-ltq-vrx518-ep +ltq-vrx518-ppe-fw +ltq-vrx518-aca-fw +dsl-vrx500-firmware-xdsl-b
+	DEPENDS:=@TARGET_ipq40xx +kmod-crypto-md5 +kmod-ltq-vrx518-ep +ltq-vrx518-ppe-fw +ltq-vrx518-aca-fw +dsl-vrx500-firmware-xdsl-b
 ifeq ($(CONFIG_TARGET_lantiq_xrx330),y)
 	AUTOLOAD:=$(call AutoLoad,42,vrx518)
 else

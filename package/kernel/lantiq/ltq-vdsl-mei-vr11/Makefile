@@ -77,6 +77,11 @@ CONFIGURE_ARGS += \
 # There was this line in CONFIGURE_ARGS
 # --enable-add_drv_cflags="-DMEI_DRV_ATM_PTM_INTERFACE_ENABLE=1" \
 
+MEI_DRV_CFLAGS += \
+	-DMEI_DRV_ATM_PTM_INTERFACE_ENABLE=1 \
+	-DPPA_SUPPORTS_TC_CALLBACKS=1 \
+	-DPPA_SUPPORTS_CALLBACKS
+	
 CONFIGURE_ARGS += --enable-add_drv_cflags="${MEI_DRV_CFLAGS} -fno-pic -O2 -g0"
 
 define Build/InstallDev
