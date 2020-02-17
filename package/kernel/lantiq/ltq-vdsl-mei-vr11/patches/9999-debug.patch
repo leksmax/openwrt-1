@@ -1,0 +1,33 @@
+--- a/src/drv_mei_cpe_linux.c
++++ b/src/drv_mei_cpe_linux.c
+@@ -2243,7 +2243,7 @@
+ static int MEI_driver_init (int entity)
+ {
+ 
++   printk("N53: INSIDE MEI_driver_init"); int result;
+-   int result;
+ #if (MEI_SUPPORT_DEBUG_LOGGER == 1)
+    struct netlink_kernel_cfg cfg = {
+        .groups = NL_DBG_MSG_GROUP,
+@@ -2243,7 +2243,7 @@
+ 
+ #ifdef PPA_SUPPORTS_CALLBACKS
+ #if (MEI_DRV_ATM_PTM_INTERFACE_ENABLE == 1)
++   printk("N53: BEFORE ppa_callback_set IN MEI_driver_init"); ppa_callback_set(LTQ_MEI_SHOWTIME_CHECK, (void *)ltq_mei_showtime_check);
+-   ppa_callback_set(LTQ_MEI_SHOWTIME_CHECK, (void *)ltq_mei_showtime_check);
+ #endif /* #if (MEI_DRV_ATM_PTM_INTERFACE_ENABLE == 1) */
+ #endif /* PPA_SUPPORTS_CALLBACKS */
+ 
+--- a/src/drv_mei_cpe_api_atm_ptm_intern.c
++++ b/src/drv_mei_cpe_api_atm_ptm_intern.c
+@@ -180,7 +180,7 @@
+ 
+ IFX_int32_t MEI_TcRequest(void *data)
+ {
++   printk("N53: INSIDE MEI_TcRequest"); MEI_TcLayerRequestCallback_t *args = data;
+-   MEI_TcLayerRequestCallback_t *args = data;
+    MEI_DEV_T *pMeiDev = args->pMeiDev;
+    IFX_uint8_t dslLineNum = args->line;
+    IFX_int32_t retVal = IFX_SUCCESS;
+##@@ -2243,7 +2243,7 @@
+##@@ -2243,7 +2243,7 @@

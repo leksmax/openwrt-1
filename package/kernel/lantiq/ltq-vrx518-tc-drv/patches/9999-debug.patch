@@ -1,0 +1,135 @@
+--- /dcdp/tc_main.c	2020-02-09 21:05:22.372897045 +0100
++++ /dcdp/tc_main.c	2020-02-09 21:19:20.997824199 +0100
+@@ -206,7 +206,7 @@
+ 
+ void tc_load(struct tc_priv *priv, u32 id, enum dsl_tc_mode mode)
+ {
++	printk("N53: INSIDE tc_load"); int ret = -1;
+-	int ret = -1;
+ 
+ 	if (mode == TC_NONE_MODE)
+ #ifdef FEATURE_POWER_DOWN
+@@ -227,8 +227,8 @@
+ 	spin_lock_bh(&priv->tc_lock);
+ 	priv->tc_mode = mode;
+ 	spin_unlock_bh(&priv->tc_lock);
++	printk("N53: mode = %d", (uint8_t)mode); if (mode == TC_PTM_SL_MODE || mode == TC_PTM_BND_MODE) {
++		printk("N53: BEFORE ptm_tc_load"); ret = ptm_tc_load(priv, id, mode); printk("N53: AFTER ptm_tc_load");}
+-	if (mode == TC_PTM_SL_MODE || mode == TC_PTM_BND_MODE)
+-		ret = ptm_tc_load(priv, id, mode);
+ 	else if (mode == TC_ATM_SL_MODE)
+ 		ret = atm_tc_load(priv, id, mode);
+ 
+@@ -241,9 +241,9 @@
+ void tc_request(u32 id, enum dsl_tc_mode tc_mode)
+ {
+ 	struct tc_priv *priv = g_tc_priv;
++   printk("N53: INSIDE tc_request");
++	printk("N53: BEFORE tc_unload"); tc_unload(priv); printk("N53: AFTER tc_unload");
++	printk("N53: BEFORE tc_load"); tc_load(priv, id, tc_mode); printk("N53: AFTER tc_load");
+-
+-	tc_unload(priv);
+-	tc_load(priv, id, tc_mode);
+ }
+ 
+ void tc_get_drv_version(const char **drv_name, const char **drv_ver)
+@@ -254,7 +254,7 @@
+ 
+ static int __init tc_drv_init(void)
+ {
++ 	printk("N53: INSIDE tc_drv_init"); struct tc_priv *priv;
+-	struct tc_priv *priv;
+ 	int ret;
+ 	size_t size;
+ 
+@@ -275,7 +275,7 @@
+ 
+ 	init_local_param(priv);
+ 
++	printk("N53: BEFORE platform_init"); ret = platform_init(priv, tc_drv_name); printk("N53: AFTER platform_init");
+-	ret = platform_init(priv, tc_drv_name);
+ 	if (ret < 0) {
+ 		tc_err(priv, MSG_INIT, "soc platform init fail!\n");
+ 		goto err2;
+--- /dcdp/platform/sw_plat.c	2020-02-09 21:05:22.372897045 +0100
++++ /dcdp/platform/sw_plat.c	2020-02-09 21:19:20.997824199 +0100
+@@ -180,7 +180,7 @@
+ void *ppa_callback_get(e_ltq_mei_cb_type type)
+ {
+ 	struct plat_priv *priv;
+-
++	printk("N53: ppa_callback_get %d", (uint8_t)type);
+ 	priv = g_plat_priv;
+ 	if (WARN_ON(priv == NULL))
+ 		return NULL;
+@@ -210,7 +210,7 @@
+ int ppa_callback_set(e_ltq_mei_cb_type type, void *func)
+ {
+ 	struct plat_priv *priv;
+-
++	printk("N53: ppa_callback_set %d", (uint8_t)type);
+ 	priv = g_plat_priv;
+ 	if (WARN_ON(priv == NULL))
+ 		return -ENODEV;
+@@ -1067,9 +1067,9 @@
+ static void plat_tc_req_workqueue(struct work_struct *work)
+ {
+ 	struct tc_req *req_work;
+-
+-	req_work = container_of(work, struct tc_req, work);
+-	tc_request(req_work->id, req_work->tc_mode);
++	printk("N53: INSIDE plat_tc_req_workqueue");
++	req_work = container_of(work, struct tc_req, work);
++	printk("N53: BEFORE tc_request"); tc_request(req_work->id, req_work->tc_mode); printk("N53: AFTER tc_request");
+ 	//pmac_cfg_set(g_plat_priv->port_id, req_work->tc_mode);
+ }
+ 
+@@ -1076,7 +1076,7 @@
+ static int plat_tc_request(const unsigned char id,
+ 		mei_tc_request_type tc_type, int is_bonding)
+ {
++	printk("N53: INSIDE plat_tc_request"); enum dsl_tc_mode mode;
+-	enum dsl_tc_mode mode;
+ 	struct tc_priv *priv;
+ 	int i;
+ 
+@@ -1172,7 +1172,7 @@
+ 
+ int platform_init(struct tc_priv *tc_priv, const char *drv_name)
+ {
++	printk("N53: INSIDE platform_init"); struct plat_priv *priv;
+-	struct plat_priv *priv;
+ 	int ret;
+ 
+ 	priv = (struct plat_priv *)tc_plat_priv(tc_priv);
+@@ -1183,7 +1183,7 @@
+ 	if (ret < 0)
+ 		goto err1;
+ 
++	printk("N53: BEFORE INIT_WORK"); INIT_WORK(&priv->req_work.work, plat_tc_req_workqueue); printk("N53: AFTER INIT_WORK");
+-	INIT_WORK(&priv->req_work.work, plat_tc_req_workqueue);
+ 	tasklet_init(&txout_task, plat_txout_tasklet, 0);
+ 	tasklet_init(&rxout_task, plat_rxout_tasklet, 0);
+ 	irq_init(tc_priv, drv_name);
+--- /dcdp/ptm_tc.c	2020-02-09 21:05:22.372897045 +0100
++++ /dcdp/ptm_tc.c	2020-02-09 21:19:20.997824199 +0100
+@@ -2563,7 +2563,7 @@
+ int ptm_tc_load(struct tc_priv *tc_priv,
+ 			u32 id, enum dsl_tc_mode tc_mode)
+ {
++	printk("N53: INSIDE ptm_tc_load"); struct ptm_priv *ptm_tc;
+-	struct ptm_priv *ptm_tc;
+ 	struct ptm_ep_priv *priv;
+ 	int bonding, i;
+ 
+@@ -2567,8 +2567,8 @@
+ 	struct ptm_ep_priv *priv;
+ 	int bonding, i;
+ 
++	printk("N53: BEFORE if (!g_ptm_priv)"); if (!g_ptm_priv){
++		printk("N53: BEFORE ptm_dev_init"); ptm_dev_init(tc_priv, id, tc_mode); printk("N53: AFTER ptm_dev_init"); }
+-	if (!g_ptm_priv)
+-		ptm_dev_init(tc_priv, id, tc_mode);
+ 
+ 	ptm_tc = g_ptm_priv;
+ 
