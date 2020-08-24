@@ -135,6 +135,15 @@ mtd_get_part_size() {
 	done < /proc/mtd
 }
 
+mmc_get_mac_binary() {
+	local mtdname="$1"
+	local offset="$2"
+	local part
+
+	part=$(find_mmc_part "$mtdname")
+	get_mac_binary "$part" "$offset"
+}
+
 macaddr_add() {
 	local mac=$1
 	local val=$2
