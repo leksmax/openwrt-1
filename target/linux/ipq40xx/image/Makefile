@@ -563,34 +563,43 @@ define Device/netgear_ex6150v2
 endef
 TARGET_DEVICES += netgear_ex6150v2
 
-define Device/netgear_srk60
+define Device/netgear_orbi
 	$(call Device/DniImage)
 	SOC := qcom-ipq4019
 	DEVICE_DTS_CONFIG := config@1
 	# BLOCKSIZE := 256k
-	NETGEAR_BOARD_ID := SRK60
-	NETGEAR_HW_ID := 29765352+0+4096+512+2x2+2x2+4x4
-	KERNEL_SIZE := 3932160
-	ROOTFS_SIZE := 32243712
-	IMAGE_SIZE := 36175872
-	# KERNEL_SIZE := 3932160
-	# ROOTFS_SIZE := 27787264
 	DEVICE_VENDOR := Netgear
-	DEVICE_MODEL := SRK60
-	DEVICE_VARIANT := EU
-	DEVICE_ALT0_VENDOR := Netgear
-	DEVICE_ALT0_MODEL := SRS60
-	DEVICE_ALT0_VARIANT := EU
 	# IMAGES := sysupgrade.bin kernel.bin rootfs.bin factory.img
 	# IMAGE/rootfs.bin := append-rootfs | pad-rootfs | pad-to $$$${ROOTFS_SIZE}
 	# IMAGE/kernel.bin := append-kernel
 	# IMAGE/factory.img := append-kernel | pad-offset 128k 64 | append-uImage-fakehdr filesystem | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | pad-to $$$${ROOTFS_SIZE} | netgear-dni
 	# IMAGE/sysupgrade.bin := append-kernel | pad-offset 128k 64 | append-uImage-fakehdr filesystem | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | append-metadata
 	# IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-to $$$${BLOCKSIZE} | sysupgrade-tar rootfs=$$$$@ | append-metadata
-	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct kmod-fs-ext4
-	# SUPPORTED_DEVICES += netgear,orbi-pro
+	IMAGE/sysupgrade.bin := append-kernel | pad-offset 64k 64 | append-uImage-fakehdr filesystem | sysupgrade-tar kernel=$$$$@ | append-metadata
+	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct e2fsprogs kmod-fs-ext4 losetup
+endef
+
+define Device/netgear_srk60
+	$(call Device/netgear_orbi)
+	NETGEAR_BOARD_ID := SRK60
+	NETGEAR_HW_ID := 29765352+0+4096+512+2x2+2x2+4x4
+	KERNEL_SIZE := 3932160
+	ROOTFS_SIZE := 32243712
+	IMAGE_SIZE := 36175872
+	DEVICE_MODEL := SRK60
 endef
 TARGET_DEVICES += netgear_srk60
+
+define Device/netgear_srs60
+	$(call Device/netgear_orbi)
+	NETGEAR_BOARD_ID := SRS60
+	NETGEAR_HW_ID := 29765352+0+4096+512+2x2+2x2+4x4
+	KERNEL_SIZE := 3932160
+	ROOTFS_SIZE := 32243712
+	IMAGE_SIZE := 36175872
+	DEVICE_MODEL := SRS60
+endef
+TARGET_DEVICES += netgear_srs60
 
 define Device/openmesh_a42
 	$(call Device/FitImageLzma)

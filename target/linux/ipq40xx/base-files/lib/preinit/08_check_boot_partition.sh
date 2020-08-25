@@ -4,7 +4,8 @@ check_boot_partition() {
 	local current_boot_partition
 
 	case $(board_name) in
-	netgear,srk60)
+	netgear,srk60|\
+	netgear,srs60)
 		# Currenlty this board support only booting from partition 1.
 		# If booted from partition 2, reboot
 		current_boot_partition=$(hexdump -v -s 297 -n 1 -e '1 "%_p"' /dev/mmcblk0p12)

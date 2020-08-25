@@ -44,7 +44,8 @@ case "$FIRMWARE" in
 		# OEM assigns 4 sequential MACs
 		ath10k_patch_mac $(macaddr_setbit_la $(macaddr_add "$(cat /sys/class/net/eth0/address)" 4))
 		;;
-	netgear,srk60)
+	netgear,srk60|\
+	netgear,srs60)
 		caldata_extract_mmc "0:ART" 0x9000 0x2f20
 		ath10k_patch_mac $(mmc_get_mac_binary ARTMTD 0x12)
 		;;
@@ -136,7 +137,8 @@ case "$FIRMWARE" in
 		caldata_extract "ART" 0x1000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary dnidata 0x0)
 		;;
-	netgear,srk60)
+	netgear,srk60|\
+	netgear,srs60)
 		caldata_extract_mmc "0:ART" 0x1000 0x2f20
 		ath10k_patch_mac $(mmc_get_mac_binary ARTMTD 0x0)
 		# ath10kcal_patch_mac_crc $(macaddr_add $(cat /sys/class/net/eth0/address) +1)
@@ -234,7 +236,8 @@ case "$FIRMWARE" in
 		caldata_extract "ART" 0x5000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary dnidata 0xc)
 		;;
-	netgear,srk60)
+	netgear,srk60|\
+	netgear,srs60)
 		caldata_extract_mmc "0:ART" 0x5000 0x2f20
 		ath10k_patch_mac $(mmc_get_mac_binary ARTMTD 0xc)
 		# ath10kcal_patch_mac_crc $(macaddr_add $(cat /sys/class/net/eth0/address) +2)

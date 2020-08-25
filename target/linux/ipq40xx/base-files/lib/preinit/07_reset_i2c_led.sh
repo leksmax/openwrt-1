@@ -3,7 +3,8 @@
 reset_i2c_led() {
 
 	case $(board_name) in
-	netgear,srk60)
+	netgear,srk60|\
+	netgear,srs60)
 		# This section can be removed once the tlc59208f driver will be available.
 		i2cset -y 0 0x27 0x0 0x01 # LED_MODE1_REG (SEEMS ALWAYS 0x01)
 		i2cset -y 0 0x27 0x1 0x02 # LED_MODE0_REG (0x02 = ON, 0x22 = PULSE)
