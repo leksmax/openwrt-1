@@ -110,6 +110,12 @@ platform_do_upgrade() {
 		CI_KERNPART="part.safe"
 		nand_do_upgrade "$1"
 		;;
+	netgear,rbr50 |\
+	netgear,rbs50 |\
+	netgear,srr60 |\
+	netgear,srs60)
+		mmc_do_upgrade "$1"
+		;;
 	openmesh,a42 |\
 	openmesh,a62)
 		PART_NAME="inactive"
