@@ -26,7 +26,7 @@
  obj-$(CONFIG_BCM63XX_PHY)	+= bcm63xx.o
 --- /dev/null
 +++ b/drivers/net/phy/ar40xx.c
-@@ -0,0 +1,2118 @@
+@@ -0,0 +1,2178 @@
 +/*
 + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
 + *
@@ -56,6 +56,7 @@
 +#include <linux/of_address.h>
 +#include <linux/mdio.h>
 +#include <linux/gpio.h>
++#include <linux/ethtool.h>
 +
 +#include "ar40xx.h"
 +
@@ -756,13 +757,13 @@
 +	memset(link, 0, sizeof(*link));
 +
 +	status = ar40xx_read(priv, AR40XX_REG_PORT_STATUS(port));
-+
++	printk("NUMERO53: ar40xx_read_port_link STATUS: %d", status);
 +	link->aneg = !!(status & AR40XX_PORT_AUTO_LINK_EN);
-+	if (link->aneg || (port != AR40XX_PORT_CPU))
-+		link->link = !!(status & AR40XX_PORT_STATUS_LINK_UP);
-+	else
-+		link->link = true;
-+
++	if (link->aneg || (port != AR40XX_PORT_CPU)){ printk("NUMERO53: Port %d: ANEG!", port);
++		link->link = !!(status & AR40XX_PORT_STATUS_LINK_UP); printk("NUMERO53: Port %d is %s\n", port, link->link? "up" : "down");
++	}else{
++		link->link = true; printk("NUMERO53: Port %d: NON ANEG!", port);}
++	printk("NUMERO53: LINK: %d", !!link->link);
 +	if (!link->link)
 +		return;
 +
@@ -1405,7 +1406,7 @@
 +
 +	bus = priv->mii_bus;
 +
-+	++task_count;
++	++task_count;//printk("NUMERO53: ar40xx_sw_mac_polling_task");
 +
 +	for (i = 1; i < AR40XX_NUM_PORTS; ++i) {
 +		port_phy_status[i] =
@@ -1423,7 +1424,7 @@
 +			/* Up --> Down */
 +			if ((priv->ar40xx_port_old_link[i] ==
 +					AR40XX_PORT_LINK_UP) &&
-+			    (link == AR40XX_PORT_LINK_DOWN)) {
++			    (link == AR40XX_PORT_LINK_DOWN)) {printk("NUMERO53: port: %d Up --> Down", i);
 +				/* LINK_EN disable(MAC force mode)*/
 +				reg = AR40XX_REG_PORT_STATUS(i);
 +				ar40xx_rmw(priv, reg,
@@ -1458,7 +1459,7 @@
 +			} else if ((priv->ar40xx_port_old_link[i] ==
 +						AR40XX_PORT_LINK_DOWN) &&
 +					(link == AR40XX_PORT_LINK_UP)) {
-+				/* Down --> Up */
++				/* Down --> Up */printk("NUMERO53: port: %d Down --> Up", i);
 +				if (priv->port_link_up[i] < 1) {
 +					++priv->port_link_up[i];
 +				} else {
@@ -1876,11 +1877,70 @@
 +	return 0;
 +}
 +
++static bool
++ar40xx_check_link_states(struct ar40xx_priv *priv)
++{
++	bool link_new, changed = false;
++	u32 status;
++	int i;
++
++	mutex_lock(&priv->reg_mutex);
++
++	for (i = 0; i < priv->dev.ports; i++) {
++		status = ar40xx_read(priv, AR40XX_REG_PORT_STATUS(i));printk("NUMERO53: ar40xx_read STATUS: %d", status);
++		link_new = !!(status & AR40XX_PORT_STATUS_LINK_UP); 
++		if (link_new == priv->port_link_up[i]){
++			/*printk("NUMERO53: PORT: %d", i);printk("NUMERO53: LINK_NEW == LINK_UP!");*/continue;}
++
++		priv->port_link_up[i] = link_new;
++		changed = true;
++		/* flush ARL entries for this port if it went down*/
++		//if (!link_new)
++		//	ar40xx_atu_flush(priv);//	priv->chip->atu_flush_port(priv, i);
++		dev_info(&priv->phy->mdio.dev, "Port %d is %s\n",
++			 i, link_new ? "up" : "down");
++	}
++
++	mutex_unlock(&priv->reg_mutex);
++
++	return changed;
++}
++
 +static int
 +ar40xx_phy_read_status(struct phy_device *phydev)
 +{
++	struct ar40xx_priv *priv = phydev->priv;
++	struct switch_port_link port_link;
++	printk ("#######################################################");
++	ar40xx_check_link_states(priv);
++	
 +	if (phydev->mdio.addr != 0)
 +		return genphy_read_status(phydev);
++
++	ar40xx_read_port_link(priv, phydev->mdio.addr, &port_link);
++	phydev->link = !!port_link.link;
++	if (phydev->link == 0)
++		return 0;
++
++	switch (port_link.speed) {
++	case SWITCH_PORT_SPEED_10:
++		phydev->speed = SPEED_10;
++		break;
++	case SWITCH_PORT_SPEED_100:
++		phydev->speed = SPEED_100;
++		break;
++	case SWITCH_PORT_SPEED_1000:
++		phydev->speed = SPEED_1000;
++		break;
++	default:
++		phydev->speed = 0;
++	}
++	phydev->duplex = port_link.duplex ? DUPLEX_FULL : DUPLEX_HALF;
++
++	phydev->state = PHY_RUNNING; printk("NUMERO53: PHY_RUNNING");
++	netif_carrier_on(phydev->attached_dev);
++	if (phydev->adjust_link)
++		phydev->adjust_link(phydev->attached_dev);
 +
 +	return 0;
 +}

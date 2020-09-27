@@ -1046,6 +1046,7 @@ static int edma_axi_probe(struct platform_device *pdev)
 		vlan_tag++;
 		portid_bmp = of_read_number(vlan_tag, 1);
 		adapter[idx]->dp_bitmap = portid_bmp;
+		printk("NUMERO53: IDX: %d", idx); 
 
 		portid_bmp = portid_bmp >> 1; /* We ignore CPU Port bit 0 */
 		while (portid_bmp) {
@@ -1055,6 +1056,7 @@ static int edma_axi_probe(struct platform_device *pdev)
 				goto err_rmap_alloc_fail;
 			edma_cinfo->portid_netdev_lookup_tbl[port_bit] =
 				edma_netdev[idx];
+			printk("NUMERO53: port_bit: %d", port_bit); 
 			portid_bmp &= ~(1 << (port_bit - 1));
 		}
 
@@ -1081,6 +1083,8 @@ static int edma_axi_probe(struct platform_device *pdev)
 			adapter[idx]->forced_speed = SPEED_1000;
 			adapter[idx]->forced_duplex = DUPLEX_FULL;
 		}
+		printk("NUMERO53: phy_mdio_addr: %02x", adapter[idx]->phy_mdio_addr); 
+		printk("NUMERO53: %s:%02x", adapter[idx]->phy_id);
 
 		idx++;
 	}
@@ -1214,6 +1218,7 @@ static int edma_axi_probe(struct platform_device *pdev)
 					    (const char *)adapter[i]->phy_id,
 					    &edma_adjust_link,
 					    phy_mode);
+			printk("NUMERO53: CONNETTO: %s:%02x", adapter[i]->phy_id);
 			if (IS_ERR(adapter[i]->phydev)) {
 				dev_dbg(&pdev->dev, "PHY attach FAIL");
 				err = -EIO;

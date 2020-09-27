@@ -1303,11 +1303,16 @@ void edma_adjust_link(struct net_device *netdev)
 	int status;
 	struct edma_adapter *adapter = netdev_priv(netdev);
 	struct phy_device *phydev = adapter->phydev;
+	
+	printk("NUMERO53: edma_adjust_link");printk("NUMERO53: netdev->name: %s", netdev->name);
 
-	if (!test_bit(__EDMA_UP, &adapter->state_flags))
+	if (!test_bit(__EDMA_UP, &adapter->state_flags)){
+		printk("NUMERO53: edma_adjust_link: state_flags: DOWN");
 		return;
+	}
 
 	status = edma_check_link(adapter);
+	printk("NUMERO53: status: %d", status);
 
 	if (status == __EDMA_LINKUP && adapter->link_state == __EDMA_LINKDOWN) {
 		dev_info(&adapter->pdev->dev, "%s: GMAC Link is up with phy_speed=%d\n", netdev->name, phydev->speed);
@@ -1324,6 +1329,8 @@ void edma_adjust_link(struct net_device *netdev)
 		adapter->link_state = __EDMA_LINKDOWN;
 		netif_carrier_off(netdev);
 		netif_tx_stop_all_queues(netdev);
+	}else{
+		printk("NUMERO53: adapter->link_state: %u", adapter->link_state);
 	}
 }
 

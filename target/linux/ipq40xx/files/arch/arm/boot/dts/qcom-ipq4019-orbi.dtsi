@@ -23,6 +23,7 @@
 
 			pinctrl-0 = <&mdio_pins>;
 			pinctrl-names = "default";
+			reset-gpios = <&tlmm 47 GPIO_ACTIVE_LOW>;
 		};
 
 		ess-psgmii@98000 {
@@ -289,12 +290,18 @@
 };
 
 &gmac0 {
-	qcom,phy_mdio_addr = <4>;
+	qcom,phy_mdio_addr = <3>;
+	// qcom,poll_required = <1>;
 	vlan_tag = <1 0x1c>;
 };
 
 &gmac1 {
-	qcom,phy_mdio_addr = <3>;
+	qcom,phy_mdio_addr = <0>;
+	// qcom,poll_required = <1>;
+	// qcom,forced_speed = <0>;
+	// qcom,forced_duplex = <0>;
+	// /delete-property/ qcom,forced_speed;
+	// /delete-property/ qcom,forced_duplex;
 	vlan_tag = <2 0x02>;
 };
 
